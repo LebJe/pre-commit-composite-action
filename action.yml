@@ -1,0 +1,32 @@
+name: 'Run Pre Commit Hooks'
+description: 'Run pre-commit hooks, then `git push` the changes.'
+inputs:
+  git-commit-message:
+    description: 'The message for `git commit`'
+    required: true
+    default: 'Run pre-commit hooks.'
+# outputs:
+#   random-number:
+#     description: "Random number"
+#     value: ${{ steps.random-number-generator.outputs.random-id }}
+runs:
+  using: "composite"
+  steps:
+    - run: "pip3 install pre-commit"
+      shell: "bash"
+    - run: "pre-commit run --all-files || true"
+      shell: "bash"
+    # Set - git commit ` username and email.
+    - uses: fregante/setup-git-user@v1
+    - run: |
+        if ! git diff --exit-code -s .github/workflows; then
+            # Workflows files were changed, but we cannot push those files without the `workflow` permission.
+            echo "::error title=Cannot Push Modified Workflow Files!::Cannot `git push` GitHub Actions workflow files without the workflow permission., Please format the files, then push the changes."
+            exit 1
+        else if ! git diff --exit-code -s .github/workflows;
+          # Files were changed.
+            git add .
+            git commit -m "${{ inputs.git-commit-message }}"
+            git push
+        fi
+      shell: "bash"
