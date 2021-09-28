@@ -12,14 +12,14 @@ runs:
       shell: "bash"
     - run: "pre-commit run --all-files || true"
       shell: "bash"
-    # Set - git commit ` username and email.
+    # Set - git commit` username and email.
     - uses: fregante/setup-git-user@v1
     - run: |
         if ! git diff --exit-code -s .github/workflows; then
-          # Workflows files were changed, but we cannot push those files without the `workflow` permission.
-          echo "::error title=Cannot Push Modified Workflow Files!::Cannot `git push` GitHub Actions workflow files without the workflow permission., Please format the files, then push the changes."
+          # Workflow files were changed, but we cannot push those files without the `workflow` permission.
+          echo "::error title=Cannot Push Modified Workflow Files!::Cannot git push GitHub Actions workflow files without the workflow permission. Please format the files, then push the changes."
           exit 1
-        elif ! git diff --exit-code -s .github/workflows; then
+        elif ! git diff --exit-code -s .; then
           # Files were changed.
           git add .
           git commit -m "Run pre-commit hooks."
