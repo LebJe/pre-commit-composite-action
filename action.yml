@@ -5,10 +5,6 @@ inputs:
     description: 'The message for `git commit`'
     required: true
     default: 'Run pre-commit hooks.'
-# outputs:
-#   random-number:
-#     description: "Random number"
-#     value: ${{ steps.random-number-generator.outputs.random-id }}
 runs:
   using: "composite"
   steps:
@@ -20,13 +16,13 @@ runs:
     - uses: fregante/setup-git-user@v1
     - run: |
         if ! git diff --exit-code -s .github/workflows; then
-            # Workflows files were changed, but we cannot push those files without the `workflow` permission.
-            echo "::error title=Cannot Push Modified Workflow Files!::Cannot `git push` GitHub Actions workflow files without the workflow permission., Please format the files, then push the changes."
-            exit 1
-        else if ! git diff --exit-code -s .github/workflows;
+          # Workflows files were changed, but we cannot push those files without the `workflow` permission.
+          echo "::error title=Cannot Push Modified Workflow Files!::Cannot `git push` GitHub Actions workflow files without the workflow permission., Please format the files, then push the changes."
+          exit 1
+        elif ! git diff --exit-code -s .github/workflows; then
           # Files were changed.
-            git add .
-            git commit -m "${{ inputs.git-commit-message }}"
-            git push
-        fi
+          git add .
+          git commit -m "Run pre-commit hooks."
+          git push
+        fi;
       shell: "bash"
