@@ -8,7 +8,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: "pip3 install pre-commit"
+    - run: "pip3 install pre-commit --break-system-packages --user"
       shell: "bash"
     - run: "pre-commit run --all-files || true"
       shell: "bash"
